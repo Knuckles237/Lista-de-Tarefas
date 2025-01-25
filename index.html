@@ -73,9 +73,32 @@ th, td {
 
                 const tableBody = document.getElementById('task-list');
                 tableBody.innerHTML = '';
-        
+
+                const dataAtual = new Date();
+
                 tasks.forEach(task => {
-                    const row = `
+
+                    if(new Date(task.prazo) < dataAtual && task.concluida!=true){                  
+                          const row = `
+                        <tr class="table-danger">
+                            <td>${task.titulo}</td>
+                            <td>${task.descricao || '-'}</td>
+                            <td>${task.dataCriacao == null || task.dataCriacao == "" ? "" : new Date(task.dataCriacao).toLocaleDateString()}</td>
+                            <td>${new Date(task.prazo).toLocaleDateString()}</td>
+                            <td>${task.dataConclusao == null || task.dataConclusao == "" ? "" : new Date(task.dataConclusao).toLocaleDateString()}</td>
+                            <td>${task.concluida ? 'Sim' : 'Não'}</td>
+                            <td>
+                                <a href="details.html?id=${task.id}" class="btn btn-info btn-sm">Detalhes</a>
+                                <a href="edit.html?id=${task.id}" class="btn btn-warning btn-sm">Editar</a>
+                                <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">Excluir</button>
+                            </td>
+                        </tr>
+                    `
+                    ;
+                    tableBody.innerHTML += row;
+                }
+
+                    else{const row = `
                         <tr class="table-">
                             <td>${task.titulo}</td>
                             <td>${task.descricao || '-'}</td>
@@ -89,8 +112,13 @@ th, td {
                                 <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">Excluir</button>
                             </td>
                         </tr>
-                    `;
-                    tableBody.innerHTML += row;
+                    `
+                    ;
+                    tableBody.innerHTML += row;}
+                        
+                    
+                    
+
                 });
             } catch (error) {
                 Swal.fire('Erro', error.message, 'error');
